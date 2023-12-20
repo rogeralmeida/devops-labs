@@ -68,6 +68,7 @@ resource "aws_route_table_association" "public_subnet_association" {
 resource "aws_security_group" "http" {
   name        = "http"
   description = "Allow inbound and outbound HTTP traffic"
+  vpc_id      = aws_vpc.wordpress-apache-vpc.id
 
   ingress {
     from_port   = 80
@@ -91,6 +92,7 @@ resource "aws_security_group" "http" {
 resource "aws_security_group" "ssh" {
   name        = "ssh"
   description = "Allow inbound SSH traffic"
+  vpc_id      = aws_vpc.wordpress-apache-vpc.id
 
   ingress {
     from_port   = 22
@@ -121,11 +123,12 @@ resource "aws_key_pair" "existing-m1-kp" {
   * and a simple "Hello, World!" HTML page
 */
 resource "aws_instance" "hello-world-apache-instance" {
-  ami             = local.ami_id
-  instance_type   = "t2.micro"
-  security_groups = [aws_security_group.http.name, aws_security_group.ssh.name]
-  key_name        = aws_key_pair.existing-m1-kp.key_name
-  user_data       = <<-EOF
+  ami                    = local.ami_id
+  instance_type          = "t2.micro"
+  subnet_id              = aws_subnet.public_subnet.id
+  vpc_security_group_ids = [aws_security_group.http.id, aws_security_group.ssh.id]
+  key_name               = aws_key_pair.existing-m1-kp.key_name
+  user_data              = <<-EOF
     #!/bin/bash
     apt-get update
     apt-get install -y apache2
