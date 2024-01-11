@@ -96,6 +96,7 @@ resource "aws_instance" "hello-world-apache-instance" {
   ami             = local.ami_id
   instance_type   = "t2.micro"
   security_groups = [aws_security_group.http.name]
+  subnet_id       = aws_subnet.public_subnet.id
   tags = {
     Name     = "hello-world-apache-vpc"
     employee = "Roger Almeida"
