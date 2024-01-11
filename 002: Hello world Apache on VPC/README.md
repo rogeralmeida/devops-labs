@@ -6,7 +6,7 @@ My impression is that the Default VPC is targeted to people with no cloud experi
 
 ## VPC
 We are creating an [AWS VPC](https://docs.aws.amazon.com/vpc/) with the following configuration:
-```ruby
+```terraform
 resource "aws_vpc" "hello-world-apache-vpc" {
   cidr_block = "10.0.0.0/16"
   tags = {
@@ -20,7 +20,7 @@ The `cidr_block = "10.0.0.0/16"` supports up to a little short of 65,536 IPs ins
 
 ### Subnets
 For now we are creating only 1 subnet:
-```ruby
+```terraform
 resource "aws_subnet" "public_subnet" {
   vpc_id                  = aws_vpc.hello-world-apache-vpc.id
   cidr_block              = "10.0.1.0/24"
@@ -39,7 +39,7 @@ resource "aws_subnet" "public_subnet" {
 ### Public Internet Access
 Since we are creating a custom VPC, it will be completly locked by default. So we have to create a [Internet Gateway](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html) and create a [Route Table](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html) to allow traffic going and coming from the public internet. This entry is created in terraform via the `aws_route_table_association` which associates the Route Table with the Subnet we have created.
 
-```ruby
+```terraform
 resource "aws_internet_gateway" "my_igw" {
   vpc_id = aws_vpc.hello-world-apache-vpc.id
   tags = {
@@ -69,7 +69,7 @@ resource "aws_route_table_association" "public_subnet_association" {
 
 ### Security Group
 But the Internet Gateway is just the road to/from the public internet. We still have to allow connections to our web-server for http requests. For that we have to create a Security Group which allows connections to the port 80.
-```ruby
+```terraform
 resource "aws_security_group" "http" {
   name        = "http"
   description = "Allow inbound and outbound HTTP traffic"
@@ -96,7 +96,7 @@ resource "aws_security_group" "http" {
 
 ## Web Server
 Finally we have to create the Web Server as an EC2 machine:
-```ruby
+```terraform
 resource "aws_instance" "hello-world-apache-instance" {
   ami             = local.ami_id
   instance_type   = "t2.micro"

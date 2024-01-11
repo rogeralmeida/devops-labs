@@ -27,7 +27,7 @@ resource "aws_nat_gateway" "nat_gateway" {
 
 >Note: The `aws_nat_gateway` requires a `allocation_id` which comes from a `aws_eip` [AWS Elastic IP](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html)
 
-```ruby
+```terraform
 resource "aws_eip" "nat_eip" {
   domain = "vpc"
   depends_on = [ aws_internet_gateway.my_igw ]
@@ -40,7 +40,7 @@ resource "aws_eip" "nat_eip" {
 
 The Route Table will need then an entry to map requests coming from the private subnet to the public internet via the NAT Gateway that seats on the Public Subnet.
 
-```ruby
+```terraform
 resource "aws_route_table" "private_route_table" {
 
   vpc_id = aws_vpc.wordpress-apache-vpc.id
@@ -70,7 +70,7 @@ But it cannot understand when a resource doesn't depend directly on another reso
 
 In this case it is safer to explicitly force the dependency between the "unrelated" resources:
 
-```ruby
+```terraform
 resource "aws_instance" "wordpress-db-server" {
   ami                    = local.ami_id
   instance_type          = "t2.micro"

@@ -48,7 +48,7 @@ This is installing both WordPress and MySQL on the one server we are using.
 ## Facilitating trouble shooting
 To be able to trouble shoot this instance, I have created a security key pair that I can use to ssh into the machine.
 
-```ruby
+```terraform
 resource "aws_key_pair" "existing-m1-kp" {
   public_key = file("./m1-kp.pub")
 }
