@@ -1,5 +1,6 @@
 # Enter Wordpress
-![Architecture](arch.png)
+
+![Alt text](arch.png)
 
 This example replaces the previous server with a worpress AND mysql installation.
 
