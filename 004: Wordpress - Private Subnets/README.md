@@ -9,7 +9,7 @@ In order for it to work we have to create a [NAT Gateway](https://docs.aws.amazo
 
 In the terraform this is done with the following resources:
 
-```ruby
+```terraform
 resource "aws_nat_gateway" "nat_gateway" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = aws_subnet.public_subnet.id
